@@ -1,0 +1,16 @@
+{
+  "name": "sampan",
+  "version": "1.0.0",
+  "description": "",
+  "main": "App.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon App.js",
+    "start": "node App.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-install": "2.1.0"
+  }
+}

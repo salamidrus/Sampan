@@ -9,8 +9,6 @@ const
     public = require('./routes/public'),
     user = require('./routes/user')
 
-// require('./config/passport')(passport)
-
 const
     app = express();
 

@@ -9,7 +9,7 @@ exports.test = (req, res) => {
   })
 }
 
-// (POST) SignUp
+// (POST) Signup
 exports.signup = (req, res) => {
   let user = new User({
     firstname: req.body.firstname,
@@ -79,23 +79,45 @@ exports.login = (req, res) => {
 // (PUT) Update Data User
 exports.update = (req, res) => {
   let id = req.decoded.id
-
-  User.findByIdAndUpdate(id, { $set: req.body }, { new: true })
-    .exec()
-    .then((userUpdated) => {
-      return res.status(201).json({
-        success: true,
-        data: {
-          user: userUpdated,
-        }
-      })
-    })
-    .catch(err => {
+  
+  User.findByIdAndUpdate(id, { $set: req.body }, { new: true }, (err, userInfo) => {
+    if (err) {
       return res.status(400).json({
         success: false,
         message: err.message
       })
-    })
+    } else {
+      if (!req.body.password) {
+        return res.status(200).json({
+          success: true,
+          message: userInfo
+        })
+      }
+    bcrypt.hash(req.body.password, 10)
+      .then((hash) => {
+        req.body.password = hash
+        userInfo.save((err) => {
+          if (err) {
+            return res.status(400).json({
+              success: false,
+              message: err.message
+            });
+          }
+          return res.status(201).json({
+            success: true,
+            message: "The corresponding user's information is successfully updated",
+            data: userInfo
+          });
+        })
+      })
+      .catch((err) => {
+        return res.status(400).json({
+          success: false,
+          message: err.message
+        })
+      })
+    }
+  })
 }
 
 // (DELETE) Delete User
@@ -123,7 +145,7 @@ exports.showProfil = (req, res) => {
   let id = req.decoded.id
 
   User.findById(id)
-    .select('_id firstname lastname email avatar username phone address' )
+    .select('_id firstname lastname email avatar username phone address')
     .exec()
     .then(doc => {
       return res.status(200).json({

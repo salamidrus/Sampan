@@ -26,3 +26,6 @@ yarn-error.log*
 
 #eslint
 /.eslintrc.js
+
+#gitlab-ci
+.gitlab-ci.yml
